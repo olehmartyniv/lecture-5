@@ -56,7 +56,7 @@ public class DriverFactory {
         switch (browser) {
             case "android":
                 Map<String, String> mobileEmulation = new HashMap<>();
-                mobileEmulation.put("deviceName", "Android");
+                mobileEmulation.put("deviceName", "Nexus 5");
                 ChromeOptions chromeOptions = new ChromeOptions();
                 chromeOptions.setExperimentalOption("mobileEmulation", mobileEmulation);
                 try {
