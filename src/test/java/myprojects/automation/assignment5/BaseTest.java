@@ -1,5 +1,7 @@
 package myprojects.automation.assignment5;
 
+import myprojects.automation.assignment5.utils.DriverFactory;
+import myprojects.automation.assignment5.utils.logging.EventHandler;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.events.EventFiringWebDriver;
@@ -28,10 +30,8 @@ public abstract class BaseTest {
     @BeforeClass
     @Parameters({"selenium.browser", "selenium.grid"})
     public void setUp(@Optional("chrome") String browser, @Optional("") String gridUrl) {
-        // TODO create WebDriver instance according to passed parameters
-        // driver = new EventFiringWebDriver(....);
-        // driver.register(new EventHandler());
-        // ...
+        driver = new EventFiringWebDriver(DriverFactory.initDriver(browser, gridUrl));
+        driver.register(new EventHandler());
 
         driver.manage().timeouts().implicitlyWait(15, TimeUnit.SECONDS);
         driver.manage().timeouts().pageLoadTimeout(30, TimeUnit.SECONDS);
