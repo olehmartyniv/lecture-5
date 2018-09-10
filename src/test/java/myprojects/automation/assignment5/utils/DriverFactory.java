@@ -75,7 +75,9 @@ public class DriverFactory {
             case "ie":
             case "internet explorer":
                 try {
-                    return new RemoteWebDriver(new URL(gridUrl), new InternetExplorerOptions());
+                    InternetExplorerOptions ieOptions = new InternetExplorerOptions().destructivelyEnsureCleanSession();
+                    ieOptions.setCapability(InternetExplorerDriver.NATIVE_EVENTS, false);
+                    return new RemoteWebDriver(new URL(gridUrl), ieOptions);
                 } catch (MalformedURLException e) {
                     e.printStackTrace();
                 }

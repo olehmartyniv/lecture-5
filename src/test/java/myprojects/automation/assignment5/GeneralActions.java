@@ -47,12 +47,6 @@ public class GeneralActions {
         int qty = parseStockValue(driver.findElement(By.xpath("//div[@class='product-quantities']/span")).getText());
         float price = parsePriceValue(driver.findElement(By.xpath("//span[@itemprop='price']")).getText());
 
-        driver.findElement(By.xpath("//button[@class='btn btn-primary add-to-cart']")).click();
-
-        WebElement purchase = driver.findElement(By.xpath("//a[@class='btn btn-primary']"));
-        wait.until(ExpectedConditions.visibilityOf(purchase));
-        purchase.click();
-
         return new ProductData(name, qty, price);
     }
 
@@ -62,11 +56,15 @@ public class GeneralActions {
      * @return
      */
     public ProductData orderCreation() {
+        driver.findElement(By.xpath("//button[@class='btn btn-primary add-to-cart']")).click();
+
+        WebElement purchase = driver.findElement(By.xpath("//a[@class='btn btn-primary']"));
+        wait.until(ExpectedConditions.visibilityOf(purchase));
+        purchase.click();
+
         String name = driver.findElement(By.xpath("//div[@class='product-line-info']/a[@class='label']")).getText();
         int qty = parseStockValue(driver.findElement(By.name("product-quantity-spin")).getAttribute("value"));
         float price = parsePriceValue(driver.findElement(By.xpath("//span[@class='product-price']")).getText());
-
-        driver.findElement(By.xpath("//div[@class='checkout cart-detailed-actions card-block']/div/a")).click();
 
         return new ProductData(name.toUpperCase(), qty, price);
     }
@@ -77,6 +75,8 @@ public class GeneralActions {
      * @return
      */
     public ProductData checkoutConfirmation() {
+        driver.findElement(By.xpath("//div[@class='checkout cart-detailed-actions card-block']/div/a")).click();
+
         driver.findElement(By.name("firstname")).sendKeys("John");
         driver.findElement(By.name("lastname")).sendKeys("Doe");
         driver.findElement(By.name("email")).sendKeys("john.doe" + (int) (Math.random()* 100) + "@mail.com");

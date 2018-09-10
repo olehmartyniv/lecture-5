@@ -20,6 +20,7 @@ public class PlaceOrderTest extends BaseTest {
     @Test
     public void createNewOrder() {
         actions.openRandomProduct();
+        String productURL = driver.getCurrentUrl();
 
         ProductData product = actions.getOpenedProductInfo();
         ProductData productInCart = actions.orderCreation();
@@ -29,8 +30,8 @@ public class PlaceOrderTest extends BaseTest {
         Assert.assertEquals(productInCart.getPrice(), product.getPrice());
 
         ProductData productInOrder = actions.checkoutConfirmation();
-
         String actualMessage = driver.findElement(By.xpath("//h3[@class='h1 card-title']")).getText().substring(1);
+
         if (driver.findElement(By.id("order-confirmation")).getAttribute("class").matches("(.*)lang-uk(.*)")) {
             String expectedMessage = "ВАШЕ ЗАМОВЛЕННЯ ПІДТВЕРДЖЕНО";
             Assert.assertEquals(actualMessage, expectedMessage);
@@ -43,7 +44,12 @@ public class PlaceOrderTest extends BaseTest {
         Assert.assertEquals(productInOrder.getQty(), 1);
         Assert.assertEquals(productInOrder.getPrice(), product.getPrice());
 
-        //TODO check updated In Stock value
+        driver.get(productURL);
+        ProductData productChecked = actions.getOpenedProductInfo();
+
+        Assert.assertEquals(productChecked.getName(), product.getName());
+        Assert.assertEquals(productChecked.getQty(), product.getQty() - 1);
+        Assert.assertEquals(productChecked.getPrice(), product.getPrice());
     }
 
 }
