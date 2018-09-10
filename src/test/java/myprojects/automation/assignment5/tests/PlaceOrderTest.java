@@ -4,7 +4,6 @@ import myprojects.automation.assignment5.BaseTest;
 import myprojects.automation.assignment5.model.ProductData;
 import myprojects.automation.assignment5.utils.Properties;
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebElement;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -20,23 +19,31 @@ public class PlaceOrderTest extends BaseTest {
 
     @Test
     public void createNewOrder() {
-        // TODO implement order creation test
         actions.openRandomProduct();
 
         ProductData product = actions.getOpenedProductInfo();
         ProductData productInCart = actions.orderCreation();
 
-        Assert.assertEquals(product.getName(), productInCart.getName());
-        Assert.assertEquals(1, productInCart.getQty());
-        Assert.assertEquals(product.getPrice(), productInCart.getPrice());
+        Assert.assertEquals(productInCart.getName(), product.getName());
+        Assert.assertEquals(productInCart.getQty(), 1);
+        Assert.assertEquals(productInCart.getPrice(), product.getPrice());
 
-        WebElement checkout = driver.findElement(By.xpath("//div[@class='checkout cart-detailed-actions card-block']/div/a"));
-        checkout.click();
-        // proceed to order creation, fill required information
+        ProductData productInOrder = actions.checkoutConfirmation();
 
-        // place new order and validate order summary
+        String actualMessage = driver.findElement(By.xpath("//h3[@class='h1 card-title']")).getText().substring(1);
+        if (driver.findElement(By.id("order-confirmation")).getAttribute("class").matches("(.*)lang-uk(.*)")) {
+            String expectedMessage = "ВАШЕ ЗАМОВЛЕННЯ ПІДТВЕРДЖЕНО";
+            Assert.assertEquals(actualMessage, expectedMessage);
+        } else {
+            String expectedMessage = "ВАШ ЗАКАЗ ПОДТВЕРЖДЁН";
+            Assert.assertEquals(actualMessage, expectedMessage);
+        }
 
-        // check updated In Stock value
+        Assert.assertEquals(productInOrder.getName(), product.getName());
+        Assert.assertEquals(productInOrder.getQty(), 1);
+        Assert.assertEquals(productInOrder.getPrice(), product.getPrice());
+
+        //TODO check updated In Stock value
     }
 
 }
